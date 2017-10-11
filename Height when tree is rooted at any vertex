@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void dfs1(int s, vector<int> *h, vector<int> &in, int par)
+{
+    if(h[s].size() == 1)
+    {
+        in[s] = 0;
+        return;
+    }
+    vector<int> ::iterator it = h[s].begin();
+    in[s] = 0;
+    while(it!=h[s].end())
+    {
+        if(*it == par) {it++;continue;}
+        else
+        {
+            dfs1(*it,h,in,s);
+            in[s] = max(in[s], 1 + in[*it]);
+        }
+        it++;
+    }
+}
+
+void dfs2(int s, vector<int> *h, vector<int> &out, int par, vector<int> &in)
+{
+    vector<int> ::iterator it = h[s].begin();
+    int max1 = 0, max2 = 0;
+    while(it!=h[s].end())
+    {
+        if(*it == par) {it++;continue;}
+        else
+        {
+            if(in[*it] > max1)
+            {
+                max2 = max1;
+                max1 = in[*it];
+            }
+            else if(in[*it] > max2)
+            {
+                max2 = in[*it];
+            }
+        }
+        it++;
+    }
+    it = h[s].begin();
+    while(it!=h[s].end())
+    {
+        int n;
+        if(*it == par) {it++;continue;}
+        else
+        {
+            n = max1;
+            if(in[*it] == max1)
+            {
+                n = max2;
+            }
+            out[*it] = max(2+n,1+out[s]);
+            dfs2(*it,h,out,s,in);
+        }
+        it++;
+    }
+}
+int main()
+{
+    int n, m, u, v, i;
+    cin>>n>>m;
+    vector<int> h[n+1];
+    int par = -1;
+    for(i=0;i<m;i++)
+    {
+        cin>>u>>v;
+        h[u].push_back(v);
+        h[v].push_back(u);
+    }
+    vector<int> in(n+1);
+    vector<int> out(n+1);
+    dfs1(1,h,in,par);
+    /*for(i=1;i<=n;i++)
+    {
+        cout<<i<<" "<<in[i]<<endl;
+    }*/
+    out[1] = 0;
+    par = -1;
+    dfs2(1,h,out,par,in);
+    for(i=1;i<=n;i++)
+    {
+        cout<<i<<" "<<out[i]<<endl;
+    }
+}
