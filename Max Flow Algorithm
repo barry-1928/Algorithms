@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool bfs(int graph[6][6], int s, int t, int parent[6])
+{
+    vector<bool>visited(6, false);
+    parent[s] = -1;
+    int u,v,t1=0;
+    queue<int> q;
+    q.push(s);
+    while(!q.empty())
+    {
+        u = q.front();
+        visited[u] = true;
+        for(int v = 0;v<6;v++)
+        {
+            if(visited[v]==false && graph[u][v]>0)
+            {
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+                if(v==t)
+                {
+                    t1 = 1;
+                    break;
+                }
+            }
+        }
+        q.pop();
+    }
+    if(t1==1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+int ford_fulkerson(int graph[6][6], int s, int t)
+{
+    int max_flow = 0;
+    int min_flow = 30000;
+    int v = t,u;
+    int parent[6];
+    while(bfs(graph,s,t, parent))
+    {
+        min_flow = 30000;
+        v = t;
+        while(v!=s)
+        {
+            u = parent[v];
+            min_flow = min(min_flow, graph[u][v]);
+            v = parent[v];
+        }
+        //cout<<min_flow<<endl;
+        v = t;
+        while(v!=s)
+        {
+            u = parent[v];
+            graph[v][u]+=min_flow;
+            graph[u][v]-=min_flow;
+            v = parent[v];
+        }
+        max_flow+=min_flow;
+    }
+    return max_flow;
+}
+int main() {
+	int graph[6][6] = { {0, 16, 13, 0, 0, 0},
+                        {0, 0, 10, 12, 0, 0},
+                        {0, 4, 0, 0, 14, 0},
+                        {0, 0, 9, 0, 0, 20},
+                        {0, 0, 0, 7, 0, 4},
+                        {0, 0, 0, 0, 0, 0}
+                      };
+    int m = ford_fulkerson(graph,0,5);
+    cout<<m;
+	return 0;
+}
