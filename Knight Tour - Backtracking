@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+//int c = 0;
+vector<vector<int>> h(10, vector<int>(10,-1));
+int n;
+void print_array()
+{
+    for(int i=0;i<n;i++)
+	{
+	    for(int j=0;j<n;j++)
+	    {
+	        cout<<h[i][j]<<" ";
+	    }
+	    cout<<endl;
+	}
+	cout<<endl;
+}
+int x[8][2] = {{2,1},{1,2},{-1,2},{-2,1},{-2,-1},{-1,-2},{1,-2},{2,-1}}; // Circular Anticlockwise starting from right of vertex
+bool fun(int a, int b, int c,int n)
+{
+    //h[a][b] = c;
+    if(c == pow(n,2)+1)
+    {
+        print_array();
+        return true;
+    }
+    int a1,b1;
+    //cout<<"a: "<<a<<" b: "<<b<<endl;
+    for(int i=0;i<8;i++)
+    {
+        a1 = a+x[i][0];
+        b1 = b+x[i][1];
+        //cout<<a<<" "<<b<<" "<<x[i][0]<<" "<<x[i][1]<<" "<<a1<<" "<<b1<<endl;
+        if(a1<0 || a1>=n || b1<0 || b1>=n) //OutOfBoundsCheck
+        {
+            continue;
+        }
+        
+            //cout<<a<<" "<<b<<" "<<x[i][0]<<" "<<x[i][1]<<" "<<a1<<" "<<b1<<endl;
+        else if(h[a1][b1]==-1) //Check if the next location is already visited
+            {
+                h[a1][b1] = c; //Visit the next location
+                //cout<<a<<" "<<b<<" "<<" "<<a1<<" "<<b1<<" "<<h[a][b]<<endl;
+                if(fun(a1,b1,c+1,n)) //Check if the next location is valid
+                {
+                    //cout<<"Hi!"<<endl;
+                    return true; // If next location is valid
+                }
+                else
+                {
+                    h[a1][b1] = -1; // If next location is invalid, unvisit the next location so that it can be visited later again
+                }
+                
+            }
+    }
+        
+    
+    return false; // No solution
+}
+int main() {
+    h[0][0]=1;
+    cin>>n;
+	bool b = fun(0,0,2,n);
+	if(!b)
+	{
+	    cout<<"Knight Tour does not exist";
+	}
+	
+	return 0;
+}
