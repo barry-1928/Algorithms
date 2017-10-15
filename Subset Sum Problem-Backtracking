@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool fun(vector<long int> &h, long int sum, long int t,long int m, long int start, long int n, vector<long int> &st)
+{
+    long int i=start;
+    bool b;
+    //cout<<i<<" "<<sum<<endl;
+    
+        if(sum+h[i]==m) //Considering h[i]
+        {
+            return true;
+        }
+        else if(sum+h[i]+h[i+1]<=m) //Considering h[i]
+        {
+            b = fun(h,sum+h[i],t-h[i],m,i+1,n,st);
+            if(b)
+                return true;
+        }
+        if(sum+t-h[i]>=m && sum+h[i+1]<=m) //Not considering h[i] and sum of "m" is still possible
+        {
+            b = fun(h,sum,t-h[i],m,i+1,n,st);
+            if(b)
+                return true;
+        }
+        return false; //No Possibility
+        
+}
+int main() {
+	//code
+	int t;
+	bool b;
+	long int n,sum=0,i;
+	cin>>t;
+	while(t--)
+	{
+	    sum = 0;
+	    cin>>n;
+	    vector<long int> h(n+1);
+	    vector<long int> st(n+1,0);
+	    for(i=1;i<=n;i++)
+	    {
+	        cin>>h[i];
+	        sum = sum+h[i];
+	    }
+	    sort(h.begin(),h.end());
+	    if(sum%2 != 0)
+	    {
+	        //cout<<"Hi!"<<endl;
+	        cout<<"NO"<<endl;
+	    }
+	    else
+	    {
+	        b = fun(h,0,sum,sum/2,1,n,st);
+	        if(b)
+	        {
+	            cout<<"YES"<<endl;
+	        }
+	        else
+	        {
+	            cout<<"NO"<<endl;
+	        }
+	    }
+	}
+	return 0;
+}
