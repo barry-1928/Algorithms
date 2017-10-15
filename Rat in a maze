@@ -1,0 +1,87 @@
+/*
+Please note that it's Function problem i.e.
+you need to write your solution in the form of Function(s) only.
+Driver Code to call/invoke your function would be added by GfG's Online Judge.*/
+
+
+/*The function returns a sorted array of strings which represents
+the directions mouse will take to reach the destination.
+You are required to complete the below method. */
+
+bool find_path(int a, int b, int m[MAX][MAX], int n, vector<string> &h,string s)
+
+{
+    if(a==n-1 && b==n-1)
+    {
+        h.push_back(s);
+        return true;
+    }
+    if(a+1<n)
+    if(m[a+1][b]==1)
+    {
+        s = s+"D";
+        m[a+1][b]=0;
+        find_path(a+1,b,m,n,h,s);
+        m[a+1][b]=1;
+        s = s.substr(0, s.size()-1);
+        
+        
+        
+    }
+    if(b-1>=0)
+    if(m[a][b-1]==1)
+    {
+        s = s+"L";
+        m[a][b-1]=0;
+        find_path(a,b-1,m,n,h,s);
+        m[a][b-1]=1;
+        s = s.substr(0, s.size()-1);     
+        
+        
+    }
+    if(b+1<n)
+    if(m[a][b+1]==1)
+    {
+        s = s+"R";
+        m[a][b+1]=0;
+        find_path(a,b+1,m,n,h,s);
+        m[a][b+1]=1;
+        s = s.substr(0, s.size()-1);
+
+        
+        
+    }
+    if(a-1>=0)
+    if(m[a-1][b]==1)
+    {
+        s = s+"U";
+        m[a-1][b]=0;
+        find_path(a-1,b,m,n,h,s);
+        m[a-1][b]=1;
+        s = s.substr(0, s.size()-1);
+        
+        
+    }
+    
+    return false;
+}
+vector<string> printPath(int m[MAX][MAX], int n)
+{
+    /*for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cout<<m[i][j]<<" ";
+        
+        }
+        cout<<endl;
+    }*/
+    vector<string> h;
+    string s = "";
+    
+    
+    m[0][0] = 0;
+    find_path(0,0,m,n,h,s);
+    return h;
+    //Your code here	
+}
