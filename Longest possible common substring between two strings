@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int t;
+    string a,b;
+    int n1,n2,i,j;
+    cin>>t;
+    while(t--)
+    {
+    cin>>n1>>n2;
+    cin>>a>>b;
+    
+    vector<vector<int>> h(n1,vector<int>(n2));
+    
+    // h[i][j] indicates the maximum length of substring ending at index i of a and index j of b
+    // So if a[i]!=b[j], then the maximum length of substring ending at index i of a and index j of b
+    // is 0, as that particular character is never included as the last character of the substring
+    // And if a[i]==b[j], then we find the maximum length of substring upto the last characters of both the
+    // strings and add 1 to it.
+    
+    int max1 = -1;
+    for(i=0;i<n1;i++)
+    {
+        for(j=0;j<n2;j++)
+        {
+            if(i==0 || j==0)
+            {
+                if(a[i] == b[j])
+                {
+                    h[i][j] = 1;
+                }
+                else
+                {
+                    h[i][j] = 0;
+                }
+            }
+            else 
+            {if(a[i] == b[j])
+            {
+                h[i][j] = h[i-1][j-1] + 1;
+                
+            }
+            else
+            {
+                h[i][j] = 0;
+            }
+            }
+            //cout<<a[i]<<" "<<b[j]<<" "<<h[i][j]<<endl;
+            max1 = max(max1,h[i][j]);
+        }
+    }
+    cout<<max1<<endl;
+    }
+    return 0;
+}
