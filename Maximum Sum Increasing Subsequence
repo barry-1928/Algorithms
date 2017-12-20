@@ -1,0 +1,74 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int t,n,i,j;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n;
+        
+        // Here h[i] stores the maximum sum of an increasing subsequence ending at ith index
+        // Single element is also an increasing subsequence of length 1
+        vector<int> input(n);
+        vector<int> h(n);
+        vector<int> parent(n);
+        int max1 = -1,p;
+        for(i=0;i<n;i++)
+        {
+            cin>>input[i];
+            if(max1 < input[i])
+            {
+                max1 = input[i];
+                p = i;
+            }
+            h[i] = input[i];
+            parent[i] = i;
+        }
+        
+        // Till now, max1 is the maximum of all elements based on last commented statement
+        // p stores the last index of the largest sum increasing subsequence
+        for(i=1;i<n;i++)
+        {
+            for(j=0;j<i;j++)
+            {
+                if(input[i] > input[j] && h[i] < h[j]+input[i])
+                {
+                    h[i] = h[j]+input[i];
+                    parent[i] = j; // The above maximum value of h[i] came from h[j]
+                    if(max1 < h[i])
+                    {
+                        p = i;
+                        max1 = h[i];
+                    }
+                }
+            }
+        }
+        cout<<max1<<endl;
+        if(p==parent[p])
+        {
+            cout<<h[p]<<endl;
+        }
+        else
+        {
+            stack<int> st;
+            while(p!=parent[p])
+            {
+                st.push(input[p]);
+                p = parent[p];
+                if(p==parent[p])
+                {
+                    st.push(input[p]);
+                }
+            }
+            while(!st.empty())
+            {
+                cout<<st.top()<<" ";
+                st.pop();
+            }
+            cout<<endl;
+        }
+    }
+    return 0;
+}
