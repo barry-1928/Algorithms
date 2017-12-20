@@ -50,7 +50,12 @@ int main()
         }
         cout<<max1<<endl;
         stack<int> st;
-        while(max1!=-1 && parent[p]!=p)
+        if(max1 == 1)
+        {
+            cout<<input[0]<<endl;
+        }
+        else 
+        {while(max1!=-1 && parent[p]!=p)
         {
             st.push(input[p]);
             //cout<<p<<endl;
@@ -64,6 +69,7 @@ int main()
             st.pop();
         }
         cout<<endl;
+        }
     }
     return 0;
 }
