@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int> v;
+map<int,int> parent;
+
+int binary_search(int l, int r, int x)
+{
+    if(l > r) return -1;
+    
+    int mid = (l+r)/2;
+    
+    if(mid+1 == v.size() && v[mid] > x) {v[mid] = x; parent[v[mid]] = x;return mid;}
+    if(mid+1 == v.size() && v[mid] < x) {v.push_back(x);parent[x] = v[v.size()-2];return mid+1;}
+    if((v[mid] < x && v[mid+1] > x)) {v[mid+1] = x;parent[x] = v[mid];return mid+1;}
+    
+    
+    if(v[mid] > x) return binary_search(l,mid-1,x);
+    
+    return binary_search(mid+1,r,x);
+}
+
+void print()
+{
+    for(int i=0;i<v.size();i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+int main()
+{
+    int n,i;
+    cin>>n;
+    vector<int> h(n);
+    for(i=0;i<n;i++)
+    {
+        cin>>h[i];
+    }
+    
+    for(i=0;i<n;i++)
+    {
+        int ind = binary_search(0,v.size()-1,h[i]);
+        
+        if(ind == -1)
+        {
+            if(v.size() == 0) {v.push_back(h[i]);parent[h[i]] = h[i];}
+            else { v[0] = h[i]; parent[h[i]] = h[i];}
+        }
+        
+        //print();
+    }
+    int x = v[v.size()-1];
+    //cout<<endl;
+    while(1)
+    {
+        cout<<x<<" ";
+        if(x == parent[x]) break;
+        x = parent[x];
+    }
+    
+}
