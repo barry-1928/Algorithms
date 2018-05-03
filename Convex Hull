@@ -1,0 +1,128 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class point
+{
+	public:
+		int x, y;
+};
+
+vector<point> points;
+vector<bool> visited;
+int n;
+
+int is_i_to_left_line(point s, point t, point i)
+{
+	int x1 = t.x - s.x;
+	int y1 = t.y - s.y;
+	
+	int x2 = i.x - s.x;
+	int y2 = i.y - s.y;
+	
+	return (x1*y2 - x2*y1);
+}
+
+int distance(point s, point t, point i)
+{
+    int d1 = pow(s.x-t.x,2) + pow(s.y-t.y,2);
+    int d2 = pow(s.x-i.x,2) + pow(s.y-i.y,2);
+    
+    return d1 - d2;
+}
+vector<point> find_convex()
+{
+	// find leftmost point in the plane
+	vector<point> ans;
+	point start =  points[0];
+	int pos = 0,i,j;
+	for(i=1;i<n;i++)
+	{
+		if(points[i].x < start.x)
+		{
+			start = points[i];
+			pos = i;
+		}
+	}
+	visited[pos] = true;
+	point newstart = start;
+	ans.push_back(start);
+	while(1)
+	{
+		//find if there is any point to the left to the line joining source and target. 
+		// If yes, then that point cannot be included
+		int pos1 = (pos+1)%n;
+		point target = points[(pos+1)%n];
+		
+		vector<int> cl;
+		for(i=0;i<n;i++)
+		{
+			if(points[i].x == target.x && points[i].y == target.y)
+			{
+				continue;
+			}
+			int x = is_i_to_left_line(newstart,target,points[i]);
+			
+			if(x > 0) // i is to the left of the line from s to t
+			{
+				pos1 = i;
+				target = points[i];
+				cl.clear();
+			}
+			else if(x == 0) //co-linear points s,t,i
+			{
+			    int dis = distance(newstart,target,points[i]);
+			    //dis > 0: i is closer
+			    if(dis > 0)
+          {
+            
+				    cl.push_back(i);
+          }
+				  else
+          {
+            cl.push_back(pos1);
+            target = points[i]; //farther point becomes the target
+          }
+				    
+			}
+		}
+		for(j=0;j<cl.size();j++) //include collinear points
+		{
+		    if(!visited[cl[j]]) //check if point has already been included
+		    {
+		        ans.push_back(points[cl[j]]);
+		        visited[cl[j]] = true;
+		    }
+		        
+		}
+		if(!visited[pos1])
+		{
+		    ans.push_back(target);
+		    visited[pos1] = true;
+		}
+		newstart = target;
+		pos = pos1;
+		if(target.x == start.x && target.y == start.y) break;
+	}
+	return ans;
+}
+int main()
+{
+	int i;
+	cin>>n;
+	points.resize(n);
+	visited.resize(n);
+	fill(visited.begin(),visited.end(),false);
+	for(i=0;i<n;i++)
+	{
+		cin>>points[i].x>>points[i].y;
+	}
+	
+	vector<point> ans = find_convex();
+	
+	for(i=0;i<ans.size();i++)
+	{
+		cout<<ans[i].x<<" "<<ans[i].y<<endl;
+	}
+	
+	return 0;
+}
